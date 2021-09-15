@@ -2,3 +2,9 @@ npm init -y
 npm install express body-parser --save
 
 node server
+
+git rm --cached .\node_modules\
+
+npm install -g nodemon
+
+nodemon server
