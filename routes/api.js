@@ -1,5 +1,23 @@
 const express = require("express");
 const router = express.Router();
+var mysql = require("mysql2");
+var connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "1234",
+  database: "auth_db_demo",
+});
+
+router.get("/from_db", (req, res) => {
+  connection.connect();
+
+  connection.query("select * from users", function (err, rows, fields) {
+    if (err) throw err;
+
+    res.send(rows);
+  });
+  connection.end();
+});
 
 const users = [
   { id: 1, email: "aaa@aaa.com", password: "1234" },
