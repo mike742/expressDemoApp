@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
-var mysql = require("mysql2");
-var connection = mysql.createConnection({
+const jwt = require("jsonwebtoken");
+
+const mysql = require("mysql2");
+const connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "1234",
   database: "auth_db_demo",
 });
+
+const SK = "secretKey";
 
 router.get("/from_db", (req, res) => {
   connection.connect();
@@ -62,7 +66,9 @@ router.post("/register", (req, res) => {
   userData["id"] = id;
   users.push(userData);
 
-  res.send(users);
+  const payload = { subject: id };
+  const token = jwt.sign(payload, SK);
+  res.send({ token });
 });
 
 router.post("/login", (req, res) => {
@@ -74,7 +80,9 @@ router.post("/login", (req, res) => {
   } else if (user.password !== userData["password"]) {
     res.status(401).send("Incorrect password");
   } else {
-    res.status(200).send(user);
+    const payload = { subject: user.id };
+    const token = jwt.sign(payload, SK);
+    res.status(200).send({ token });
   }
 });
 

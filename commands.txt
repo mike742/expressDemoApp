@@ -8,3 +8,13 @@ git rm --cached .\node_modules\
 npm install -g nodemon
 
 nodemon server
+
+
+ng g s services/auth
+ng g s services/products
+
+npm install --save cors 
+
+npm install --save jsonwebtoken
+
+ng g guard guards/auth
