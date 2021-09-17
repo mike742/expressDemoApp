@@ -37,7 +37,7 @@ router.get("/products", (req, res) => {
   res.status(200).send(list);
 });
 
-router.get("/premium", (req, res) => {
+router.get("/premium", verifyToken, (req, res) => {
   const list = [
     { id: 1, name: "Pizza primium", price: 107.55 },
     { id: 2, name: "Pasta primium", price: 108.99 },
@@ -85,5 +85,30 @@ router.post("/login", (req, res) => {
     res.status(200).send({ token });
   }
 });
+
+function verifyToken(req, res, next) {
+  if (!req.headers.authorization) {
+    return res.status(401).send("Unauthorized request");
+  }
+
+  // "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoxLCJpYXQiOjE2MzE4ODk1Mjl9.SCLpr_KWqiLynBO6tF_bZ3E7MLRkkhQ9yjrTE5j0gY4"
+  const token = req.headers.authorization.split(" ")[1];
+
+  if (token === "null") {
+    return res.status(401).send("Unauthorized request");
+  }
+
+  try {
+    const check = jwt.verify(token, SK);
+
+    if (!check) {
+      return res.status(401).send("Unauthorized request");
+    }
+
+    next();
+  } catch (err) {
+    return res.status(418).send("Somethig wrong with token");
+  }
+}
 
 module.exports = router;

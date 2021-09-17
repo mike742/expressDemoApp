@@ -18,3 +18,5 @@ npm install --save cors
 npm install --save jsonwebtoken
 
 ng g guard guards/auth
+
+ng g s services/token-interceptor
